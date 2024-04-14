@@ -137,16 +137,17 @@ function memoize(func) {
  * retryer() => 2
  */
 function retry(func, attempts) {
-  let result = null;
-  try {
-    result = func();
-  } catch (e) {
+  let result;
+  return () => {
     for (let i = 0; i < attempts; i += 1) {
-      result = func();
+      try {
+        return func();
+      } catch (e) {
+        result = e;
+      }
     }
-  }
-
-  return result;
+    return result;
+  };
 }
 
 /**
@@ -174,7 +175,11 @@ function retry(func, attempts) {
  */
 function logger(func, logFunc) {
   return (...args) => {
-    logFunc(func(...args));
+    const argString = JSON.stringify(args).slice(1, -1);
+    logFunc(`${func.name}(${argString}) starts`);
+    const result = func(...args);
+    logFunc(`${func.name}(${argString}) ends`);
+    return result;
   };
 }
 
