@@ -111,7 +111,7 @@ function getPolynom(...args) {
  */
 function memoize(func) {
   const memo = {};
-  return function (...args) {
+  return (...args) => {
     const key = args.join();
     if (memo[key]) {
       return memo[key];
@@ -197,9 +197,7 @@ function logger(func, logFunc) {
  *   partialUsingArguments(fn, 'a','b','c','d')() => 'abcd'
  */
 function partialUsingArguments(fn, ...args1) {
-  return function (...args) {
-    return fn(...args1.concat(args));
-  };
+  return (...args) => fn(...args1.concat(args));
 }
 
 /**
@@ -221,7 +219,7 @@ function partialUsingArguments(fn, ...args1) {
  */
 function getIdGeneratorFunction(startFrom) {
   let callNum = -1;
-  return function () {
+  return () => {
     callNum += 1;
     return startFrom + callNum;
   };
